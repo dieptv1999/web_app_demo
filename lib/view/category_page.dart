@@ -10,7 +10,7 @@ import 'package:web_app_demo/widgets/appbar.dart';
 import 'package:web_app_demo/widgets/footer.dart';
 import 'package:web_app_demo/widgets/verify_view.dart';
 
-import 'edit_post.dart';
+import 'edit_post_page.dart';
 
 class CategoryPage extends StatefulWidget {
   static String routeName = 'CategoryPage';

@@ -242,21 +242,24 @@ class EditPostState extends State<EditPost>
                                   _tagsController.text.trim() != '') {
                                 var bytes = utf8.encode(
                                     _titleController.text); // data being hashed
-                                List<String> tags =
-                                    _tagsController.text.trim().split(',');
-                                List<String> tags2 = post.tag.split(',');
-                                tags2.forEach((element) {
-                                  if (!_tagsController.text.contains(element)) {
-                                    CategoryProvider()
-                                        .removePost(element, post.id);
-                                  }
-                                });
-                                tags.forEach((element) {
-                                  if (!post.tag.contains(element)) {
-                                    CategoryProvider()
-                                        .addPost(element, post.id);
-                                  }
-                                });
+                                if (post.tag != null && post.tag != '') {
+                                  List<String> tags =
+                                      _tagsController.text.trim().split(',');
+                                  List<String> tags2 = post.tag.split(',');
+                                  tags2.forEach((element) {
+                                    if (!_tagsController.text
+                                        .contains(element)) {
+                                      CategoryProvider()
+                                          .removePost(element, post.id);
+                                    }
+                                  });
+                                  tags.forEach((element) {
+                                    if (!post.tag.contains(element)) {
+                                      CategoryProvider()
+                                          .addPost(element, post.id);
+                                    }
+                                  });
+                                }
                                 var digest = sha1.convert(bytes);
                                 String ID = digest.toString();
                                 post = new PostModel(

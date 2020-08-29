@@ -6,9 +6,10 @@ import 'package:web_app_demo/model/md_extension_set.dart';
 import 'package:web_app_demo/model/post_model.dart';
 import 'package:web_app_demo/model/screen_arg.dart';
 import 'package:web_app_demo/services/post_provider.dart';
-import 'package:web_app_demo/view/edit_post.dart';
+import 'package:web_app_demo/view/edit_post_page.dart';
 import 'package:web_app_demo/widgets/HeadersView.dart';
 import 'package:web_app_demo/widgets/appbar.dart';
+import 'package:web_app_demo/widgets/comment.dart';
 import 'package:web_app_demo/widgets/footer.dart';
 import 'package:web_app_demo/widgets/verify_view.dart';
 import 'home_page.dart';
@@ -87,6 +88,20 @@ class PostPageState extends State<PostPage> {
               controller: ScrollController(),
               data: value.content.toString(),
               extensionSet: MarkdownExtensionSet.githubWeb.value,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 310,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              border: Border.all(color: Colors.black38, width: 1),
+            ),
+            child: CommentWidget(
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: sizeW,
             ),
           ),
           SizedBox(

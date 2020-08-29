@@ -12,7 +12,7 @@ import 'package:web_app_demo/widgets/verify_view.dart';
 
 import '../model/category_model.dart';
 import 'category_page.dart';
-import 'edit_post.dart';
+import 'edit_post_page.dart';
 
 class MyHomePage extends StatefulWidget {
   static String routeName = 'MyHomePage';

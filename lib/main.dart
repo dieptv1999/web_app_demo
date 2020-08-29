@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:web_app_demo/model/post_model.dart';
 import 'package:web_app_demo/model/screen_arg.dart';
 import 'package:web_app_demo/view/category_page.dart';
-import 'package:web_app_demo/view/edit_post.dart';
+import 'package:web_app_demo/view/edit_post_page.dart';
 import 'package:web_app_demo/view/home_page.dart';
 import 'package:web_app_demo/view/post_page.dart';
 
