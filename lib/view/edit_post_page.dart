@@ -259,6 +259,13 @@ class EditPostState extends State<EditPost>
                                           .addPost(element, post.id);
                                     }
                                   });
+                                } else {
+                                  List<String> tags =
+                                      _tagsController.text.trim().split(',');
+                                  tags.forEach((element) {
+                                    CategoryProvider()
+                                        .addPost(element, post.id);
+                                  });
                                 }
                                 var digest = sha1.convert(bytes);
                                 String ID = digest.toString();

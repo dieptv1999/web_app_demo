@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:web_app_demo/model/comment_model.dart';
 import 'package:web_app_demo/model/md_extension_set.dart';
 import 'package:web_app_demo/model/post_model.dart';
 import 'package:web_app_demo/model/screen_arg.dart';
+import 'package:web_app_demo/services/comment_provider.dart';
 import 'package:web_app_demo/services/post_provider.dart';
 import 'package:web_app_demo/view/edit_post_page.dart';
 import 'package:web_app_demo/widgets/HeadersView.dart';
@@ -29,6 +31,8 @@ class PostPageState extends State<PostPage> {
 
   PostPageState(this.arg);
 
+  Color _likeColor = Colors.grey;
+
   BoxDecoration _shadowBox = BoxDecoration(
     color: Colors.white,
     shape: BoxShape.rectangle,
@@ -49,7 +53,7 @@ class PostPageState extends State<PostPage> {
     ],
   );
 
-  Widget _mainContent(context, sizeW, value) => Container(
+  Widget _mainContent(context, sizeW, PostModel value) => Container(
       width: sizeW,
       child: Column(
         children: [
@@ -90,11 +94,22 @@ class PostPageState extends State<PostPage> {
               extensionSet: MarkdownExtensionSet.githubWeb.value,
             ),
           ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Comment',
+                textAlign: TextAlign.start,
+                style: TextStyle(fontSize: 26),
+              ),
+              _comments(value.id, sizeW),
+            ],
+          ),
           SizedBox(
             height: 20,
           ),
           Container(
-            height: 310,
+            height: 320,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               border: Border.all(color: Colors.black38, width: 1),
@@ -102,6 +117,7 @@ class PostPageState extends State<PostPage> {
             child: CommentWidget(
               height: MediaQuery.of(context).size.height * 0.3,
               width: sizeW,
+              id: value.id,
             ),
           ),
           SizedBox(
@@ -195,6 +211,75 @@ class PostPageState extends State<PostPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: ls,
+      ),
+    );
+  }
+
+  Widget _comments(id, sizeW) {
+    return FutureProvider<CommentModel>(
+      create: (_) => CommentProvider().getComment(id),
+      child: Consumer<CommentModel>(
+        builder: (_, val, __) {
+          if (val != null) {
+            return Container(
+              height: val.content.length < 2
+                  ? 200
+                  : val.content.length < 4 ? 500 : 800,
+              width: sizeW,
+              child: ListView.builder(
+                itemBuilder: (ctx, index) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      child: MarkdownBody(
+                        data: val.content.elementAt(index),
+                      ),
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Row(
+                      children: [
+                        StatefulBuilder(
+                          builder: (ctx, setState) => InkWell(
+                            onTap: () {
+                              setState(() {
+                                _likeColor = _likeColor == Colors.indigo
+                                    ? Colors.grey
+                                    : Colors.indigo;
+                              });
+                            },
+                            child: Text(
+                              'Thích',
+                              style: TextStyle(fontSize: 10, color: _likeColor),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text(
+                          '3 giờ.',
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                itemCount: val.content.length,
+              ),
+            );
+          }
+          return Center();
+        },
       ),
     );
   }

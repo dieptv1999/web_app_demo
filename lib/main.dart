@@ -5,6 +5,7 @@ import 'package:web_app_demo/view/category_page.dart';
 import 'package:web_app_demo/view/edit_post_page.dart';
 import 'package:web_app_demo/view/home_page.dart';
 import 'package:web_app_demo/view/post_page.dart';
+import 'package:web_app_demo/view/profile_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       MyHomePage.routeName: (context) => new MyHomePage(),
       //PostPage.routeName: (context) => new PostPage(),
       //CategoryPage.routeName: (context) => new CategoryPage(),
+      //ProfilePage.routeName: (ctx) => ProfilePage(),
     };
     return MaterialApp(
       title: 'Blog phoenix',

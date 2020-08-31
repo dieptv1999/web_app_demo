@@ -1,27 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:web_app_demo/model/comment_model.dart';
+import 'package:web_app_demo/services/comment_provider.dart';
 
 class CommentWidget extends StatefulWidget {
   double height;
   double width;
+  String id;
 
   CommentWidget({
-    this.height,
-    this.width,
+    @required this.height,
+    @required this.width,
+    @required this.id,
   });
 
   @override
-  State<StatefulWidget> createState() => CommentState();
+  State<StatefulWidget> createState() => CommentState(
+        height: height,
+        width: width,
+        id: id,
+      );
 }
 
 class CommentState extends State<CommentWidget>
     with SingleTickerProviderStateMixin {
   double height;
   double width;
+  String id;
 
   CommentState({
     this.height,
     this.width,
+    @required this.id,
   });
 
   Color _write = Colors.blueAccent;
@@ -31,6 +42,7 @@ class CommentState extends State<CommentWidget>
   String content = '';
   TextEditingController _editController;
   TextEditingController _previewController;
+  double iconSize = 24;
 
   @override
   void initState() {
@@ -55,20 +67,34 @@ class CommentState extends State<CommentWidget>
   void _onBold() {
     TextSelection selected = _editController.selection;
     String s = _editController.text;
-    String x = s.substring(selected.baseOffset, selected.extentOffset);
-    if (!x.startsWith('**') || !x.endsWith('**')) {
+    if (selected.baseOffset != -1) {
+      String x = s.substring(selected.baseOffset, selected.extentOffset);
+      if (!x.startsWith('**') || !x.endsWith('**')) {
+        setState(() {
+          _editController.text = s.substring(0, selected.baseOffset) +
+              "**" +
+              x +
+              "**" +
+              s.substring(selected.extentOffset);
+        });
+      }
+    } else {
+      int len = _editController.text.length;
       setState(() {
-        _editController.text = s.substring(0, selected.baseOffset) +
-            "**" +
-            x +
-            "**" +
-            s.substring(selected.extentOffset);
+        _editController.text = _editController.text + "****";
+        _editController.selection = TextSelection.collapsed(
+          offset: len + 2,
+        );
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (MediaQuery.of(context).size.width < 500)
+      iconSize = 12;
+    else
+      iconSize = 24;
     return Column(
       children: [
         Row(
@@ -76,7 +102,7 @@ class CommentState extends State<CommentWidget>
             Container(
               width: 150,
               child: Padding(
-                padding: EdgeInsets.only(left: 8.0),
+                padding: EdgeInsets.only(left: 8.0, top: 3),
                 child: TabBar(
                   tabs: [
                     Tab(
@@ -103,82 +129,117 @@ class CommentState extends State<CommentWidget>
               ),
             ),
             Expanded(
-              child: ButtonBar(
-                buttonPadding: EdgeInsets.zero,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  FlatButton(
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
                     padding: EdgeInsets.zero,
-                    onPressed: () {
-                      _onBold();
-                    },
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        _onBold();
+                      },
+                      icon: Image.asset(
                         'assets/editor/004-bold.png',
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  FlatButton(
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        _onBold();
+                      },
+                      icon: Image.asset(
                         'assets/editor/031-italic.png',
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  FlatButton(
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        _onBold();
+                      },
+                      icon: Image.asset(
                         'assets/editor/057-underline.png',
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  FlatButton(
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        _onBold();
+                      },
+                      icon: Image.asset(
                         'assets/editor/005-quote.png',
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  FlatButton(
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        _onBold();
+                      },
+                      icon: Image.asset(
                         'assets/editor/009-code.png',
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  FlatButton(
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Container(
+                    height: iconSize,
+                    width: iconSize,
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
-                    child: Container(
-                      height: 24,
-                      width: 24,
-                      child: Image.asset(
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        _onBold();
+                      },
+                      icon: Image.asset(
                         'assets/editor/034-link.png',
                         fit: BoxFit.fill,
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    width: 8.0,
                   ),
                 ],
               ),
@@ -200,14 +261,18 @@ class CommentState extends State<CommentWidget>
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(8),
                   ),
+                  onChanged: (text) {
+                    setState(() {
+                      this.content = text;
+                    });
+                  },
                 ),
-                TextField(
-                  controller: _previewController,
-                  maxLines: 10,
-                  style: TextStyle(fontSize: 18),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.all(8),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: MarkdownBody(
+                      data: content,
+                    ),
                   ),
                 ),
               ],
@@ -220,7 +285,10 @@ class CommentState extends State<CommentWidget>
               padding: EdgeInsets.only(left: 8.0),
               child: Text(
                 'Write by Markdown',
-                style: TextStyle(color: Colors.black38),
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 12,
+                ),
               ),
             ),
             Expanded(
@@ -231,17 +299,23 @@ class CommentState extends State<CommentWidget>
                     onPressed: () {},
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('Delete All'),
+                      child: Text(
+                        'Delete All',
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ),
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (content != null && content != '')
+                        CommentProvider().addComment(id, content);
+                    },
                     color: Colors.green,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         'Save comment',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 12),
                       ),
                     ),
                   ),
